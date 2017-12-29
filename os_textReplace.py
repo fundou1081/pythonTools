@@ -5,10 +5,12 @@ import glob
 import time
 
 
-def textReplace(filename, oldStr, newStr):
+def textReplace(filename, oldStr, newStr, files):
 	fileData=""
 	bakData=""
 	bakname=filename+".bak"
+	
+	bakfileExist=os.path.split(bakname)[-1]
 	
 	with open(filename, "r") as f:
 
@@ -20,8 +22,9 @@ def textReplace(filename, oldStr, newStr):
 
 	with open(filename, "w") as f:
 		f.write(fileData)
-	with open(bakname, "w") as f:
-		f.write(bakData)
+	if not (bakfileExist in files):	
+		 with open(bakname, "w") as f:
+			f.write(bakData)
 
 
 
@@ -56,9 +59,9 @@ def gci(filepath):
 		fi_d=os.path.join(filepath,fi)
 		if os.path.isdir(fi_d):
 			gci(fi_d)
-		elif  fi==filename :
+		elif  fi==filename:
 			N+=1
-			#textReplace(fi_d, oldStr, newStr)
+			textReplace(fi_d, oldStr, newStr, files)
 		
 
 def allData(path):
@@ -70,6 +73,13 @@ def allData(path):
 
 
 def pathLevel1(filepath):
+
+	global N
+	global path
+	global filename
+	global oldStr170
+	global newStr
+
 	files=os.listdir(filepath)
 	for fi in files:
 		if fi[0]==".":
@@ -78,12 +88,16 @@ def pathLevel1(filepath):
 		if os.path.isdir(fi_d):
 			print(fi_d)			
 			gci(fi_d)
+		elif  fi==filename:
+			N+=1
+			textReplace(fi_d, oldStr, newStr, files)
+				
 
 ########################
 
 ## global var
 N=0
-path=r"/home/rhome/app/"
+path=r"/home/rhome/app"
 filename="lib.defs"
 oldStr=r"/home/app"
 newStr=r"/home/rhome/app"
